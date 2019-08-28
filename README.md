@@ -1,4 +1,4 @@
-# mysitewagtail
+# First Blog using wagtail
 
 Create Simple website with blog pages using Wagtail 
 
