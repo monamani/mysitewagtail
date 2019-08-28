@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block body_class %}template-blogdetail{% endblock %}
+ {% block content %}
+ {% image self.banner_image fill-900x200 as img_blog %}
+ <img src="{{img_blog.url}}" class="card-img-top" alt="{{img_blog.alt}}" style="width:100%;">
+ <div class="space50"></div>
+ <div class="container">
+     <div class="row">
+         <div class="col-lg-12">
+            <h1 class="text-center">{{ self.title }}</h1>
+            <p class="meta">{{ self.date }}</p>
+            {% include 'blog/author_details.html' %}
+            <div class="space20"></div>
+            <!-- List of categories-->
+       <div class="row">
+           <div class="col-md-6">
+                {% if self.blog_categories.count %}
+               <h5>Categories:</h5>
+               <ul>
+                    {% for categ in self.blog_categories.all%}
+                    <li> 
+                        <a href="{{ self.get_parent.url }}?category={{ categ.slug }}">
+                            {{ categ.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+           </div>
+           <div class="col-md-6">
+                
+         {# Check if there are tags #}
+         {% if page.tags.count %}
+         <h5>Tags:</h5>
+         {% for tag in page.tags.all %}
+             {# Loop through all the existing tags #}
+             <a href="/blog/?tag={{ tag.slug }}">{{ tag }}</a><br />
+         {% endfor %}
+     {% endif %} <br>
+           </div>
+       </div>
+            
+    
+            <div class="intro">{{ self.intro }}</div>
+            {{ self.body|richtext }}
+            <p><a href="{{ self.get_parent.url }}">Return to blog</a></p>
+         </div>
+     </div>
+ </div>
+
+
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags wagtailimages_tags wagtailroutablepage_tags cache %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1> {% if isLatest %} {{isLatest}} {% else %} {{ page.title }} {% endif %}</h1>
+    <hr class="my-4">
+    <div class="intro">{{ page.intro|richtext }}</div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <!--  latest_blog : is the function name-->
+            <a href="{% routablepageurl page 'latest_blog_list' %}">View the last post only</a>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-8">
+            <h4>Blog List</h4>
+            {% for post in posts %}
+            {% cache 604800 blog_post_preview post.id %}
+            <!-- cached for 1 week  -->
+            {% image post.banner_image fill-300x200 as img_blog %}
+
+            <div class="row">
+
+                <div class="col-lg-4">
+                    <img src="{{img_blog.url}}" class="card-img-top" alt="{{img_blog.alt}}">
+                </div>
+                <div class="col-lg-8">
+                    <h3><a href="{{ post.url }}">{{ post.title }}</a></h3>
+                    {{ post.specific.intro }} <br>
+
+                    {% if post.tags.count %}
+                    {% for tag in self.tags.all %}
+                    <a href="/blog/?tag={{ tag.slug }}">
+                        {{ tag }}
+                    </a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                    {% endif %} <br>
+                    <a href="{{post.url}}" class="btn btn-primary">View details</a>
+                </div>
+            </div>
+            <hr>
+            {% endcache %}
+            {% endfor %}
+        </div>
+        <div class="col-md-4">
+            <h4>Categories</h4>
+            <ul>
+                {% for categ in blog_categories.all%}
+                <li>
+
+                    <a href="{% routablepageurl page "category_view" categ.slug %}">
+                        {{ categ.name }}
+                    </a>
+                </li>
+
+                <!--{% if not forloop.last %}, {% endif %}-->
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% if posts.paginator.num_pages > 1 %}
+            <ul class="pagination pagination-sm">
+                {% if posts.has_previous %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="?page={{posts.previous_page_number}}">&laquo;</a>
+                </li>
+                {% endif %}
+                {% for page_num in posts.paginator.page_range %}
+                <li class="page-item {% if page_num == posts.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{page_num}}">{{ page_num }}</a>
+                </li>
+                {% endfor %}
+                {% if posts.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{posts.next_page_number}}">&raquo;</a>
+                </li>
+                {% endif %}
+            </ul>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

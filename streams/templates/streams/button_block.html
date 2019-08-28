@@ -1,0 +1,6 @@
+<a href="{{self.url}}" class="btn btn-primary">Learn more  {{self.url}}</a>
+<br><br>
+{% for post in self.latest_posts %}
+  Blog Title {{forloop.counter}}: {{ post.title }} <br>
+{% endfor %}
+<br> 

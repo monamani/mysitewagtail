@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}template-homepage{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/homepage.css' %}">
+{% endblock extra_css %}
+{% block content %}
+<!-- Need load wagtailcore_tags-->
+{% image self.banner_image fill-900x400 as imgBanner %}
+<div class="jumbotron"
+  style="background-image: url('{{ imgBanner.url }}'); background-size: cover; color: black !important">
+  <div class="container">
+    <p class="lead">{{self.banner_title}}</p>
+    <hr class="my-4">
+    {{self.body | richtext}}
+    <br>
+    {% if self.banner_cta %}
+    <a class="btn btn-primary btn-lg" href="{{self.banner_cta.url}}" role="button">{{self.banner_cta}}</a>
+    {% endif %}
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6">
+      <h1>My Gallery </h1>
+      {% include 'home/carousel.html' %}
+    </div>
+    <div class="col-lg-6">
+        <!--h5>List of streamfield</h5>-->
+        {% for block in page.content_stream %}
+         {% include_block block %}
+        {% endfor %}
+      </div>
+  </div>
+  <div class="space50"></div>
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>Social Media Account</h3>
+      {% if settings.site_settings.SocialMediaSettings.facebook %}
+      <a href="{{settings.site_settings.SocialMediaSettings.facebook}}"> Facebook Link </a> <br>
+      {% endif%}
+      {% if settings.site_settings.SocialMediaSettings.twitter %}
+      <a href="{{settings.site_settings.SocialMediaSettings.twitter}}"> Twitter Link </a><br>
+      {% endif%}
+      {% if settings.site_settings.SocialMediaSettings.instagram %}
+      <a href="{{settings.site_settings.SocialMediaSettings.instagram}}"> Instagram Link </a><br>
+      {% endif%}
+    </div>
+  </div>
+</div>
+
+<!--{% include 'home/welcome_page.html' %} -->
+{% endblock content %}

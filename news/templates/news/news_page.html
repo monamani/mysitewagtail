@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static wagtailcore_tags wagtailimages_tags %}
+{% block body_class %}template-newspage{% endblock %} 
+
+    {% block content %}   <!-- Need load wagtailcore_tags-->
+    
+    <div class="jumbotron"> 
+        <h2> {{self.title}}</h2>
+        <hr class="my-4">
+        {{self.subtitle | richtext}} 
+    </div> 
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <h5>List of streamfield</h5>
+          {% for block in page.content_stream %}
+             {% include_block block %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  
+
+    {% endblock content %} 
+</div>
+

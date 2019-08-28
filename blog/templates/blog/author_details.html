@@ -1,0 +1,17 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+<div class="d-flex justify-content-center">
+  {% for authr in self.blog_authors.all %}
+    {% image authr.author.image fill-100x100 as img %}
+    <div>
+      <img src="{{ img.url }}" class="rounded-circle" alt="{{ authr.author.name }}"><br>
+      {% if authr.author.website %}
+      <a href="{{ authr.author.website }}">
+        {{ authr.author.name }}
+      </a>
+      {% else %}
+      {{ authr.author.name }}
+      {% endif %} 
+    </div>
+   
+  {% endfor %}
+</div>
